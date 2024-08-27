@@ -30,6 +30,7 @@ import (
 
 // BlobTx represents an EIP-4844 transaction.
 type BlobTx struct {
+	BaseTx
 	ChainID    *uint256.Int
 	Nonce      uint64
 	GasTipCap  *uint256.Int // a.k.a. maxPriorityFeePerGas

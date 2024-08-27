@@ -26,6 +26,7 @@ import (
 
 // DynamicFeeTx represents an EIP-1559 transaction.
 type DynamicFeeTx struct {
+	BaseTx
 	ChainID    *big.Int
 	Nonce      uint64
 	GasTipCap  *big.Int // a.k.a. maxPriorityFeePerGas
