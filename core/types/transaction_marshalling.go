@@ -414,7 +414,7 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 		}
 
 	default:
-		var itx BlobTx
+		var itx BaseTx
 		inner = &itx
 		itx.Hash = dec.Hash
 		// return ErrTxTypeNotSupported

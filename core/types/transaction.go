@@ -73,6 +73,8 @@ func NewTx(inner TxData) *Transaction {
 //
 // This is implemented by DynamicFeeTx, LegacyTx and AccessListTx.
 type TxData interface {
+	hash() common.Hash
+
 	txType() byte // returns the type ID
 	copy() TxData // creates a deep copy and initializes all fields
 
@@ -485,12 +487,14 @@ func (tx *Transaction) Hash() common.Hash {
 		return *hash
 	}
 
-	var h common.Hash
-	if tx.Type() == LegacyTxType {
-		h = rlpHash(tx.inner)
-	} else {
-		h = prefixedRlpHash(tx.Type(), tx.inner)
-	}
+	// var h common.Hash
+	// if tx.Type() == LegacyTxType {
+	// 	h = rlpHash(tx.inner)
+	// } else {
+	// 	h = prefixedRlpHash(tx.Type(), tx.inner)
+	// }
+
+	h := tx.inner.hash()
 	tx.hash.Store(&h)
 	return h
 }
