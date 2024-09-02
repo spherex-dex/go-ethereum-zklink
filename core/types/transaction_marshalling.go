@@ -171,7 +171,6 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 	case LegacyTxType:
 		var itx LegacyTx
 		inner = &itx
-		itx.Hash = dec.Hash
 		if dec.Nonce == nil {
 			return errors.New("missing required field 'nonce' in transaction")
 		}
@@ -220,7 +219,6 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 	case AccessListTxType:
 		var itx AccessListTx
 		inner = &itx
-		itx.Hash = dec.Hash
 		if dec.ChainID == nil {
 			return errors.New("missing required field 'chainId' in transaction")
 		}
@@ -276,7 +274,6 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 	case DynamicFeeTxType:
 		var itx DynamicFeeTx
 		inner = &itx
-		itx.Hash = dec.Hash
 		if dec.ChainID == nil {
 			return errors.New("missing required field 'chainId' in transaction")
 		}
@@ -336,7 +333,6 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 	case BlobTxType:
 		var itx BlobTx
 		inner = &itx
-		itx.Hash = dec.Hash
 		if dec.ChainID == nil {
 			return errors.New("missing required field 'chainId' in transaction")
 		}
@@ -414,10 +410,7 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 		}
 
 	default:
-		var itx BaseTx
-		inner = &itx
-		itx.Hash = dec.Hash
-		// return ErrTxTypeNotSupported
+		return ErrTxTypeNotSupported
 	}
 
 	// Now set the inner transaction.

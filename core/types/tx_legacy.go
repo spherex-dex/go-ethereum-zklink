@@ -25,7 +25,6 @@ import (
 
 // LegacyTx is the transaction data of the original Ethereum transactions.
 type LegacyTx struct {
-	BaseTx
 	Nonce    uint64          // nonce of sender account
 	GasPrice *big.Int        // wei per gas
 	Gas      uint64          // gas limit

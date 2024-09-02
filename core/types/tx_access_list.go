@@ -46,7 +46,6 @@ func (al AccessList) StorageKeys() int {
 
 // AccessListTx is the data of EIP-2930 access list transactions.
 type AccessListTx struct {
-	BaseTx
 	ChainID    *big.Int        // destination chain ID
 	Nonce      uint64          // nonce of sender account
 	GasPrice   *big.Int        // wei per gas
