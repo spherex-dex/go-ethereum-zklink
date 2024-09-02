@@ -40,43 +40,55 @@ func TestAccountHeaderGas(t *testing.T) {
 	ae := NewAccessEvents(utils.NewPointCache(1024))
 
 	// Check cold read cost
-	gas := ae.BasicDataGas(testAddr, false)
+	gas := ae.VersionGas(testAddr, false)
 	if want := params.WitnessBranchReadCost + params.WitnessChunkReadCost; gas != want {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, want)
 	}
 
 	// Check warm read cost
-	gas = ae.BasicDataGas(testAddr, false)
+	gas = ae.VersionGas(testAddr, false)
 	if gas != 0 {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, 0)
 	}
 
 	// Check cold read costs in the same group no longer incur the branch read cost
+	gas = ae.BalanceGas(testAddr, false)
+	if gas != params.WitnessChunkReadCost {
+		t.Fatalf("incorrect gas computed, got %d, want %d", gas, params.WitnessChunkReadCost)
+	}
+	gas = ae.NonceGas(testAddr, false)
+	if gas != params.WitnessChunkReadCost {
+		t.Fatalf("incorrect gas computed, got %d, want %d", gas, params.WitnessChunkReadCost)
+	}
+	gas = ae.CodeSizeGas(testAddr, false)
+	if gas != params.WitnessChunkReadCost {
+		t.Fatalf("incorrect gas computed, got %d, want %d", gas, params.WitnessChunkReadCost)
+	}
 	gas = ae.CodeHashGas(testAddr, false)
 	if gas != params.WitnessChunkReadCost {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, params.WitnessChunkReadCost)
 	}
 
 	// Check cold write cost
-	gas = ae.BasicDataGas(testAddr, true)
+	gas = ae.VersionGas(testAddr, true)
 	if want := params.WitnessBranchWriteCost + params.WitnessChunkWriteCost; gas != want {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, want)
 	}
 
 	// Check warm write cost
-	gas = ae.BasicDataGas(testAddr, true)
+	gas = ae.VersionGas(testAddr, true)
 	if gas != 0 {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, 0)
 	}
 
 	// Check a write without a read charges both read and write costs
-	gas = ae.BasicDataGas(testAddr2, true)
+	gas = ae.BalanceGas(testAddr2, true)
 	if want := params.WitnessBranchReadCost + params.WitnessBranchWriteCost + params.WitnessChunkWriteCost + params.WitnessChunkReadCost; gas != want {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, want)
 	}
 
 	// Check that a write followed by a read charges nothing
-	gas = ae.BasicDataGas(testAddr2, false)
+	gas = ae.BalanceGas(testAddr2, false)
 	if gas != 0 {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, 0)
 	}
@@ -101,7 +113,7 @@ func TestContractCreateInitGas(t *testing.T) {
 
 	// Check cold read cost, without a value
 	gas := ae.ContractCreateInitGas(testAddr, false)
-	if want := params.WitnessBranchWriteCost + params.WitnessBranchReadCost + params.WitnessChunkWriteCost + params.WitnessChunkReadCost; gas != want {
+	if want := params.WitnessBranchWriteCost + params.WitnessBranchReadCost + params.WitnessChunkWriteCost*2 + params.WitnessChunkReadCost*2; gas != want {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, want)
 	}
 
@@ -119,17 +131,17 @@ func TestMessageCallGas(t *testing.T) {
 
 	// Check cold read cost, without a value
 	gas := ae.MessageCallGas(testAddr)
-	if want := params.WitnessBranchReadCost + params.WitnessChunkReadCost; gas != want {
+	if want := params.WitnessBranchReadCost + params.WitnessChunkReadCost*2; gas != want {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, want)
 	}
 
-	// Check that reading the basic data and code hash of the same account does not incur the branch read cost
-	gas = ae.BasicDataGas(testAddr, false)
+	// Check that reading the version and code size of the same account does not incur the branch read cost
+	gas = ae.VersionGas(testAddr, false)
 	if gas != 0 {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, 0)
 	}
-	gas = ae.CodeHashGas(testAddr, false)
-	if gas != params.WitnessChunkReadCost {
+	gas = ae.CodeSizeGas(testAddr, false)
+	if gas != 0 {
 		t.Fatalf("incorrect gas computed, got %d, want %d", gas, 0)
 	}
 

@@ -110,6 +110,10 @@ func (db *Database) Sync() error {
 	return nil
 }
 
+func (db *Database) MigrateTable(s string, f func([]byte) ([]byte, error)) error {
+	panic("not supported")
+}
+
 func (db *Database) NewBatch() ethdb.Batch {
 	panic("not supported")
 }

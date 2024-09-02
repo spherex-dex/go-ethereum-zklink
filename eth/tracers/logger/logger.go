@@ -268,9 +268,7 @@ func (l *StructLogger) OnTxEnd(receipt *types.Receipt, err error) {
 		}
 		return
 	}
-	if receipt != nil {
-		l.usedGas = receipt.GasUsed
-	}
+	l.usedGas = receipt.GasUsed
 }
 
 // StructLogs returns the captured log entries.
