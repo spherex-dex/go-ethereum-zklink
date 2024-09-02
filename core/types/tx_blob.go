@@ -96,9 +96,6 @@ type blobTxWithBlobs struct {
 // copy creates a deep copy of the transaction data and initializes all fields.
 func (tx *BlobTx) copy() TxData {
 	cpy := &BlobTx{
-		BaseTx: BaseTx{
-			Hash: tx.Hash,
-		},
 		Nonce: tx.Nonce,
 		To:    tx.To,
 		Data:  common.CopyBytes(tx.Data),
