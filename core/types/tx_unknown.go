@@ -8,6 +8,7 @@ import (
 )
 
 type UnknownTx struct {
+	Hash     common.Hash
 	Nonce    uint64          // nonce of sender account
 	GasPrice *big.Int        // wei per gas
 	Gas      uint64          // gas limit

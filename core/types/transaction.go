@@ -489,6 +489,8 @@ func (tx *Transaction) Hash() common.Hash {
 	var h common.Hash
 	if tx.Type() == LegacyTxType {
 		h = rlpHash(tx.inner)
+	} else if tx.Type() == UnknownTxType {
+		h = tx.inner.(*UnknownTx).Hash
 	} else {
 		h = prefixedRlpHash(tx.Type(), tx.inner)
 	}

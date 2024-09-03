@@ -413,6 +413,7 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 
 		var itx UnknownTx
 		inner = &itx
+		itx.Hash = dec.Hash
 		if dec.Nonce == nil {
 			return errors.New("missing required field 'nonce' in transaction")
 		}
@@ -439,23 +440,21 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 
 		// signature R
 		if dec.R == nil {
-			return errors.New("missing required field 'r' in transaction")
+			itx.R = common.Big0
+		} else {
+			itx.R = (*big.Int)(dec.R)
 		}
-		itx.R = (*big.Int)(dec.R)
 		// signature S
 		if dec.S == nil {
-			return errors.New("missing required field 's' in transaction")
+			itx.S = common.Big0
+		} else {
+			itx.S = (*big.Int)(dec.S)
 		}
-		itx.S = (*big.Int)(dec.S)
 		// signature V
 		if dec.V == nil {
-			return errors.New("missing required field 'v' in transaction")
-		}
-		itx.V = (*big.Int)(dec.V)
-		if itx.V.Sign() != 0 || itx.R.Sign() != 0 || itx.S.Sign() != 0 {
-			if err := sanityCheckSignature(itx.V, itx.R, itx.S, true); err != nil {
-				return err
-			}
+			itx.V = common.Big0
+		} else {
+			itx.V = (*big.Int)(dec.V)
 		}
 		// return ErrTxTypeNotSupported
 	}
