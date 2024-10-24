@@ -171,6 +171,7 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 	case LegacyTxType:
 		var itx LegacyTx
 		inner = &itx
+		itx.Hash = dec.Hash
 		if dec.Nonce == nil {
 			return errors.New("missing required field 'nonce' in transaction")
 		}
@@ -410,7 +411,6 @@ func (tx *Transaction) UnmarshalJSON(input []byte) error {
 		}
 
 	default:
-
 		var itx UnknownTx
 		inner = &itx
 		itx.Hash = dec.Hash

@@ -25,6 +25,7 @@ import (
 
 // LegacyTx is the transaction data of the original Ethereum transactions.
 type LegacyTx struct {
+	Hash     common.Hash     `rlp:"-"`
 	Nonce    uint64          // nonce of sender account
 	GasPrice *big.Int        // wei per gas
 	Gas      uint64          // gas limit
